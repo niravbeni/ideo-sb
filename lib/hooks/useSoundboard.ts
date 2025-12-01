@@ -40,7 +40,12 @@ export function useSoundboard() {
         // Preload default sounds
         const preloadPromises = loadedSlots
           .filter((slot) => slot.currentSource.kind === "default")
-          .map((slot) => preloadSound(slot.id, slot.currentSource.url));
+          .map((slot) => {
+            if (slot.currentSource.kind === "default") {
+              return preloadSound(slot.id, slot.currentSource.url);
+            }
+            return Promise.resolve(null);
+          });
 
         await Promise.all(preloadPromises);
 
