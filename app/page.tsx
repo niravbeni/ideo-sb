@@ -88,86 +88,28 @@ export default function Home() {
   }, [slots, isInitialized]);
 
   const handlePlay = useCallback(
-    async (slotId: string) => {
+    (slotId: string) => {
       const slot = slots.find((s) => s.id === slotId);
       if (!slot || slot.currentSource.kind === "empty") {
         return;
       }
 
-      // On first interaction ONLY, ensure AudioContext is ready
-      if (!audioReady) {
-        ensureAudioContextRunning();
-        setAudioReady(true);
-      }
-
       const buffer = getAudioBuffer(slotId);
       
-      // If no buffer (e.g., recording that couldn't be decoded), use HTMLAudio fallback
-      if (!buffer && (slot.currentSource.kind === "recording" || slot.currentSource.kind === "upload")) {
-        try {
-          const blob = await getAudioBlob(slot.currentSource.blobId);
-          if (blob) {
-            // Create audio element and blob URL
-            const audio = new Audio();
-            const blobUrl = URL.createObjectURL(blob);
-            
-            // Set up event handlers BEFORE setting src
-            audio.onended = () => {
-              setPlayingStates((prev) => ({ ...prev, [slotId]: false }));
-              URL.revokeObjectURL(blobUrl);
-            };
-            
-            audio.onerror = (e) => {
-              console.error("Audio playback error:", e);
-              setPlayingStates((prev) => ({ ...prev, [slotId]: false }));
-              URL.revokeObjectURL(blobUrl);
-              showToast("Failed to play recording", "error");
-            };
-            
-            // Set playing state
-            setPlayingStates((prev) => ({ ...prev, [slotId]: true }));
-            
-            // Load and play
-            audio.src = blobUrl;
-            audio.load();
-            
-            // Play with promise handling
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-              playPromise.catch((error) => {
-                console.error("Play failed:", error);
-                setPlayingStates((prev) => ({ ...prev, [slotId]: false }));
-                URL.revokeObjectURL(blobUrl);
-                showToast("Playback failed - try recording again", "error");
-              });
-            }
-            
-            return;
-          } else {
-            showToast("Recording not found", "error");
-            return;
-          }
-        } catch (error) {
-          console.error("Error playing recording:", error);
-          showToast("Failed to play sound", "error");
-          return;
-        }
-      }
-
       if (!buffer) {
         showToast("Sound not loaded yet", "error");
         return;
       }
 
-      // Play sound FIRST - before any state updates for instant feedback!
+      // Update visual state BEFORE playing for instant feedback
+      setPlayingStates((prev) => ({ ...prev, [slotId]: true }));
+
+      // Play sound INSTANTLY - no async!
       playSound(slotId, buffer, () => {
         setPlayingStates((prev) => ({ ...prev, [slotId]: false }));
       });
-
-      // Update visual state after starting playback
-      setPlayingStates((prev) => ({ ...prev, [slotId]: true }));
     },
-    [slots, audioReady]
+    [slots]
   );
 
 
@@ -224,11 +166,17 @@ export default function Home() {
     setToast(null);
   };
 
-  // Unlock audio on first user interaction (required for iOS/Safari)
+  // Unlock audio IMMEDIATELY on first user interaction (required for iOS/Safari)
   useEffect(() => {
-    const unlockAudio = async () => {
+    const unlockAudio = () => {
       if (!audioReady) {
-        await ensureAudioContextRunning();
+        // Synchronous unlock - no await
+        const ctx = initAudioContext();
+        if (ctx.state === "suspended") {
+          ctx.resume().then(() => {
+            console.log("Audio unlocked and ready");
+          });
+        }
         setAudioReady(true);
       }
     };
@@ -236,12 +184,10 @@ export default function Home() {
     // Listen for any user interaction to unlock audio
     document.addEventListener("click", unlockAudio, { once: true });
     document.addEventListener("touchstart", unlockAudio, { once: true });
-    document.addEventListener("keydown", unlockAudio, { once: true });
 
     return () => {
       document.removeEventListener("click", unlockAudio);
       document.removeEventListener("touchstart", unlockAudio);
-      document.removeEventListener("keydown", unlockAudio);
     };
   }, [audioReady]);
 
