@@ -22,10 +22,12 @@ export default function SoundButton({
   const isEmpty = slot.currentSource.kind === "empty";
   const isCustomSlot = !slot.isPreset;
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e?: React.MouseEvent) => {
     // Prevent any default behavior that might cause delay
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
     if (isEmpty && isCustomSlot && onUpload) {
       // Trigger file upload for empty custom slots
