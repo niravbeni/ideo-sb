@@ -30,14 +30,16 @@ export function checkBrowserSupport(): {
   serviceWorker: boolean;
 } {
   return {
-    audioContext: !!(window.AudioContext || (window as any).webkitAudioContext),
+    audioContext: !!(typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)),
     mediaRecorder: !!(
+      typeof navigator !== 'undefined' &&
       navigator.mediaDevices &&
-      navigator.mediaDevices.getUserMedia &&
-      window.MediaRecorder
+      typeof navigator.mediaDevices.getUserMedia === 'function' &&
+      typeof window !== 'undefined' &&
+      typeof window.MediaRecorder === 'function'
     ),
-    indexedDB: !!window.indexedDB,
-    serviceWorker: "serviceWorker" in navigator,
+    indexedDB: !!(typeof window !== 'undefined' && window.indexedDB),
+    serviceWorker: typeof navigator !== 'undefined' && "serviceWorker" in navigator,
   };
 }
 
