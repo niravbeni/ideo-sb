@@ -69,7 +69,7 @@ export default function ManageSlotCard({
         {/* Upload/Replace Button */}
         <button
           onClick={handleUploadClick}
-          className="px-2 py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition-colors shadow-sm font-medium min-w-[60px]"
+          className="px-2 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors font-medium flex-1 min-w-[50px]"
           aria-label={`Upload sound for ${slot.label}`}
         >
           {slot.currentSource.kind === "empty" ? "Upload" : "Replace"}
@@ -79,7 +79,7 @@ export default function ManageSlotCard({
         {slot.isPreset && slot.currentSource.kind !== "default" && (
           <button
             onClick={() => onReset(slot.id)}
-            className="px-2 py-1.5 bg-amber-600 text-white text-xs rounded-md hover:bg-amber-700 transition-colors shadow-sm font-medium min-w-[60px]"
+            className="px-2 py-1 bg-amber-600 text-white text-xs rounded hover:bg-amber-700 transition-colors font-medium flex-1 min-w-[50px]"
             aria-label={`Reset ${slot.label} to default`}
           >
             Reset
@@ -90,7 +90,7 @@ export default function ManageSlotCard({
         {!slot.isPreset && slot.currentSource.kind !== "empty" && (
           <button
             onClick={() => onClear(slot.id)}
-            className="px-2 py-1.5 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition-colors shadow-sm font-medium min-w-[60px]"
+            className="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors font-medium flex-1 min-w-[50px]"
             aria-label={`Clear ${slot.label}`}
           >
             Clear
