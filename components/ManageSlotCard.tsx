@@ -50,10 +50,10 @@ export default function ManageSlotCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-2 md:p-3 border border-gray-200 flex flex-col justify-between h-full">
+    <div className="bg-white rounded-lg shadow-md p-2 md:p-3 border border-gray-200 flex flex-col justify-between aspect-square">
       {/* Emoji - Large and centered */}
       <div className="flex-1 flex items-center justify-center min-h-0">
-        <span className="text-5xl md:text-6xl lg:text-7xl" role="img" aria-label={slot.label}>
+        <span className="text-4xl md:text-5xl lg:text-6xl" role="img" aria-label={slot.label}>
           {slot.emoji}
         </span>
       </div>
