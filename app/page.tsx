@@ -39,7 +39,12 @@ export default function Home() {
         // Preload default sounds
         const preloadPromises = loadedSlots
           .filter((slot) => slot.currentSource.kind === "default")
-          .map((slot) => preloadSound(slot.id, slot.currentSource.url));
+          .map((slot) => {
+            if (slot.currentSource.kind === "default") {
+              return preloadSound(slot.id, slot.currentSource.url);
+            }
+            return Promise.resolve(null);
+          });
 
         const results = await Promise.allSettled(preloadPromises);
         
