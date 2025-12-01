@@ -50,22 +50,22 @@ export default function ManageSlotCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-2 md:p-3 border border-gray-200 flex flex-col justify-between aspect-square">
+    <div className="bg-white rounded-lg shadow-md p-2 border border-gray-200 flex flex-col justify-between h-full w-full">
       {/* Emoji - Large and centered */}
       <div className="flex-1 flex items-center justify-center min-h-0">
-        <span className="text-4xl md:text-5xl lg:text-6xl" role="img" aria-label={slot.label}>
+        <span className="text-3xl md:text-4xl lg:text-5xl" role="img" aria-label={slot.label}>
           {slot.emoji}
         </span>
       </div>
 
       {/* Label and Status */}
-      <div className="text-center mb-2 flex-shrink-0">
-        <h3 className="font-bold text-xs md:text-sm mb-0.5">{slot.label}</h3>
+      <div className="text-center mb-1 flex-shrink-0">
+        <h3 className="font-bold text-xs truncate">{slot.label}</h3>
         <p className="text-xs text-gray-500 truncate">{getSourceDescription()}</p>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-1.5 justify-center flex-shrink-0">
+      <div className="flex flex-wrap gap-1 justify-center flex-shrink-0">
         {/* Upload/Replace Button */}
         <button
           onClick={handleUploadClick}

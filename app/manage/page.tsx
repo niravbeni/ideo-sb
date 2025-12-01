@@ -168,15 +168,15 @@ export default function ManagePage() {
       </header>
 
       {/* Main Content - Fill entire space */}
-      <main className="flex-1 overflow-hidden flex flex-col">
+      <main className="flex-1 overflow-hidden flex flex-col p-2 md:p-3">
         {/* Volume Control - Fixed height at top */}
-        <section className="bg-white rounded-lg shadow-md p-3 md:p-4 m-2 md:m-4 flex-shrink-0">
+        <section className="bg-white rounded-lg shadow-md p-2 md:p-3 mb-2 md:mb-3 flex-shrink-0">
           <VolumeSlider initialVolume={volume} onChange={handleVolumeChange} />
         </section>
 
-        {/* Slot Management - Scrollable grid filling remaining space */}
-        <section className="flex-1 overflow-y-auto px-2 md:px-4 pb-2 md:pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-max gap-2 md:gap-3">
+        {/* Slot Management - Fill remaining space exactly, NO SCROLL */}
+        <section className="flex-1 min-h-0 overflow-hidden">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-4 gap-2 md:gap-3 h-full">
             {slots.map((slot) => (
               <ManageSlotCard
                 key={slot.id}
