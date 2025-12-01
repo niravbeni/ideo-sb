@@ -146,9 +146,11 @@ export function getRecorder(): AudioRecorder {
 // Check if recording is supported
 export function isRecordingSupported(): boolean {
   return !!(
+    typeof navigator !== 'undefined' &&
     navigator.mediaDevices &&
-    navigator.mediaDevices.getUserMedia &&
-    window.MediaRecorder
+    typeof navigator.mediaDevices.getUserMedia === 'function' &&
+    typeof window !== 'undefined' &&
+    typeof window.MediaRecorder === 'function'
   );
 }
 
